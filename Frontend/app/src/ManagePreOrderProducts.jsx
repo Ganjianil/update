@@ -25,7 +25,9 @@ export default function ManagePreOrderProducts() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const resp = await fetch("http://localhost:10145/api/preorder-products");
+      const resp = await fetch(
+        "https://update-xrp4.onrender.com/api/preorder-products"
+      );
       console.log("Fetch Response Status:", resp.status);
       if (!resp.ok) throw new Error(`HTTP error! Status: ${resp.status}`);
       const data = await resp.json();
@@ -97,7 +99,7 @@ export default function ManagePreOrderProducts() {
       let resp;
       if (editingId) {
         resp = await fetch(
-          `http://localhost:10145/api/admin/preorder-products/${editingId}`,
+          `https://update-xrp4.onrender.com/api/admin/preorder-products/${editingId}`,
           {
             method: "PUT",
             body: formData,
@@ -105,7 +107,7 @@ export default function ManagePreOrderProducts() {
         );
       } else {
         resp = await fetch(
-          "http://localhost:10145/api/admin/preorder-products",
+          "https://update-xrp4.onrender.com/api/admin/preorder-products",
           {
             method: "POST",
             body: formData,
@@ -156,7 +158,7 @@ export default function ManagePreOrderProducts() {
 
     try {
       const response = await fetch(
-        `http://localhost:10145/api/admin/preorder-products/${id}`,
+        `https://update-xrp4.onrender.com/api/admin/preorder-products/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -334,7 +336,7 @@ export default function ManagePreOrderProducts() {
                 prod.photos.map((url, i) => (
                   <img
                     key={i}
-                    src={`http://localhost:10145${url}`}
+                    src={`https://update-xrp4.onrender.com${url}`}
                     alt={`${prod.name} photo ${i + 1}`}
                     className="w-16 h-16 rounded object-cover border"
                     onError={(e) => {

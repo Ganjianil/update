@@ -43,7 +43,7 @@ const Checkout = ({ selectedProduct }) => {
           return;
         }
         const productResponse = await axios.get(
-          `http://localhost:10145/products/${productToFetch}`,
+          `https://update-xrp4.onrender.com/products/${productToFetch}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("Fetched product:", productResponse.data);
@@ -75,7 +75,7 @@ const Checkout = ({ selectedProduct }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:10145/apply-coupon",
+        "https://update-xrp4.onrender.com/apply-coupon",
         { coupon_code: couponCode },
         {
           headers: {
@@ -166,7 +166,7 @@ const Checkout = ({ selectedProduct }) => {
       console.log("Sending payload to /checkout:", payload);
 
       const response = await axios.post(
-        "http://localhost:10145/checkout",
+        "https://update-xrp4.onrender.com/checkout",
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -16,7 +16,7 @@ const Product = () => {
         setError("");
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://localhost:10145/viewproducts/${id}`,
+          `https://update-xrp4.onrender.com/viewproducts/${id}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
           }
@@ -56,7 +56,7 @@ const Product = () => {
     try {
       console.log("Adding to cart, product ID:", id, "Token:", token);
       const response = await axios.post(
-        "http://localhost:10145/addtocart",
+        "https://update-xrp4.onrender.com/addtocart",
         { product_id: id, quantity: 1 },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -117,7 +117,7 @@ const Product = () => {
             product.image_path
               ? product.image_path.startsWith("http")
                 ? product.image_path
-                : `http://localhost:10145/upload/${product.image_path.replace(
+                : `https://update-xrp4.onrender.com/upload/${product.image_path.replace(
                     /\\/g,
                     "/"
                   )}`

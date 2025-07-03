@@ -107,7 +107,7 @@ const AddProduct = () => {
       });
 
       const response = await axios.post(
-        "http://localhost:10145/products",
+        "https://update-xrp4.onrender.com/products",
         formData,
         {
           headers: {

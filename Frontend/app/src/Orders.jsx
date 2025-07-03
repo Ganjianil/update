@@ -58,11 +58,14 @@ const Orders = ({ isAuthenticated: propIsAuthenticated }) => {
         return;
       }
       console.log("Fetching orders with token:", token);
-      const response = await axios.get("http://localhost:10145/myorders", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://update-xrp4.onrender.com/myorders",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const grouped = response.data.reduce((acc, order) => {
         if (!acc[order.order_id]) {
@@ -119,7 +122,7 @@ const Orders = ({ isAuthenticated: propIsAuthenticated }) => {
       }
       console.log(`Cancelling order ${orderId} with token:`, token);
       const response = await axios.put(
-        `http://localhost:10145/order/${orderId}/cancel`,
+        `https://update-xrp4.onrender.com/order/${orderId}/cancel`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -159,7 +162,7 @@ const Orders = ({ isAuthenticated: propIsAuthenticated }) => {
         token
       );
       const res = await axios.get(
-        `http://localhost:10145/order/${orderId}/invoice`,
+        `https://update-xrp4.onrender.com/order/${orderId}/invoice`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",

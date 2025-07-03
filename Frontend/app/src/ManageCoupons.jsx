@@ -29,7 +29,7 @@ const ManageCoupons = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:10145/admin/coupons"
+        "https://update-xrp4.onrender.com/admin/coupons"
       );
       setCoupons(response.data);
     } catch (error) {
@@ -120,12 +120,15 @@ const ManageCoupons = () => {
 
       if (editingCoupon) {
         await axios.put(
-          `http://localhost:10145/admin/coupons/${editingCoupon.id}`,
+          `https://update-xrp4.onrender.com/admin/coupons/${editingCoupon.id}`,
           dataToSend
         );
         setMessage("Coupon updated successfully!");
       } else {
-        await axios.post("http://localhost:10145/admin/coupons", dataToSend);
+        await axios.post(
+          "https://update-xrp4.onrender.com/admin/coupons",
+          dataToSend
+        );
         setMessage("Coupon created successfully!");
       }
 
@@ -166,7 +169,9 @@ const ManageCoupons = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:10145/admin/coupons/${couponId}`);
+      await axios.delete(
+        `https://update-xrp4.onrender.com/admin/coupons/${couponId}`
+      );
       setMessage("Coupon deleted successfully!");
       await fetchCoupons();
     } catch (error) {
@@ -187,7 +192,7 @@ const ManageCoupons = () => {
       };
 
       await axios.put(
-        `http://localhost:10145/admin/coupons/${couponId}`,
+        `https://update-xrp4.onrender.com/admin/coupons/${couponId}`,
         updatedData
       );
       setMessage(

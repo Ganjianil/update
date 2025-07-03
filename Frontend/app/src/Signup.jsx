@@ -48,11 +48,14 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:10145/signup", {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        "https://update-xrp4.onrender.com/signup",
+        {
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }
+      );
 
       alert("Account created successfully! Please login.");
       navigate("/login");

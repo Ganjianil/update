@@ -17,7 +17,7 @@ export default function ManagePreOrderSubmissions() {
 
     try {
       const resp = await fetch(
-        "http://localhost:10145/api/admin/preorder-submissions",
+        "https://update-xrp4.onrender.com/api/admin/preorder-submissions",
         {
           headers: {
             Authorization: `Bearer ${token}`, // Include token if available
@@ -41,7 +41,7 @@ export default function ManagePreOrderSubmissions() {
     const token = localStorage.getItem("adminToken");
 
     const resp = await fetch(
-      `http://localhost:10145/api/admin/preorder-submissions/${id}`,
+      `https://update-xrp4.onrender.com/api/admin/preorder-submissions/${id}`,
       {
         method: "DELETE",
         headers: {

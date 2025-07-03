@@ -26,7 +26,9 @@ export default function PreOrderProducts() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const resp = await fetch("http://localhost:10145/api/preorder-products");
+      const resp = await fetch(
+        "https://update-xrp4.onrender.com/api/preorder-products"
+      );
       if (!resp.ok) {
         throw new Error(`HTTP error! Status: ${resp.status}`);
       }
@@ -100,13 +102,16 @@ export default function PreOrderProducts() {
         required_specifications: form.required_specifications,
       };
 
-      const resp = await fetch("http://localhost:10145/api/preorder/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
+      const resp = await fetch(
+        "https://update-xrp4.onrender.com/api/preorder/submit",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
 
       if (resp.ok) {
         setSuccessMsg("Order placed successfully!");
@@ -166,11 +171,13 @@ export default function PreOrderProducts() {
                   prod.photos.map((url, i) => (
                     <img
                       key={i}
-                      src={`http://localhost:10145${url}`}
+                      src={`https://update-xrp4.onrender.com${url}`}
                       alt={`${prod.name} photo ${i + 1}`}
                       className="w-24 h-24 rounded object-cover border cursor-pointer inline-block mr-2" /* Increased to w-24 h-24 */
                       onClick={() => {
-                        setZoomedImage(`http://localhost:10145${url}`);
+                        setZoomedImage(
+                          `https://update-xrp4.onrender.com${url}`
+                        );
                         setZoomLevel(1); // Reset zoom level when opening
                       }}
                       onError={(e) => {

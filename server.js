@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 10145;
+const port = 20158;
 const mysql = require("mysql2");
 const multer = require("multer");
 const upload = multer({ dest: 'upload/' });
@@ -545,7 +545,13 @@ module.exports = pool.promise();
 
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://nandinicraft.netlify.app',
+    credentials: true, // Optional: if you’re dealing with cookies or authorization headers
+  })
+);
+
 
 
 app.listen(port, () => {

@@ -69,9 +69,12 @@ const App = () => {
 
     try {
       console.log("🔄 Fetching cart items from server...");
-      const response = await axios.get("http://localhost:10145/viewcart", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://update-xrp4.onrender.com/viewcart",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       console.log("✅ Cart items fetched from server:", response.data);
       const items = Array.isArray(response.data) ? response.data : [];

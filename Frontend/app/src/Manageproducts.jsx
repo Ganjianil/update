@@ -12,7 +12,9 @@ const Manageproducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:10145/viewproducts");
+      const response = await axios.get(
+        "https://update-xrp4.onrender.com/viewproducts"
+      );
       setProducts(response.data);
       setLoading(false);
     } catch (error) {
@@ -51,7 +53,9 @@ const Manageproducts = () => {
       )
     ) {
       try {
-        await axios.delete("http://localhost:10145/deleteallproducts");
+        await axios.delete(
+          "https://update-xrp4.onrender.com/deleteallproducts"
+        );
         setMessage("All products deleted successfully!");
         fetchProducts(); // Refresh the list
       } catch (error) {
@@ -131,7 +135,7 @@ const Manageproducts = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {product.image_path ? (
                           <img
-                            src={`http://localhost:10145/${product.image_path}`}
+                            src={`https://update-xrp4.onrender.com/${product.image_path}`}
                             alt={product.product_name}
                             className="h-16 w-16 object-cover rounded-md"
                           />

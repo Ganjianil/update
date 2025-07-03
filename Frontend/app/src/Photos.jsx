@@ -17,7 +17,7 @@ const Photos = () => {
 
   const fetchPhotos = async () => {
     try {
-      const res = await axios.get("http://localhost:10145/photos");
+      const res = await axios.get("https://update-xrp4.onrender.com/photos");
       setPhotos(res.data);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -40,7 +40,7 @@ const Photos = () => {
     selectedFiles.forEach((file) => formData.append("photos", file));
 
     try {
-      await axios.post("http://localhost:10145/photos", formData);
+      await axios.post("https://update-xrp4.onrender.com/photos", formData);
       setSelectedFiles([]);
       setPreviewUrls([]);
       fetchPhotos();
@@ -55,7 +55,7 @@ const Photos = () => {
     if (!confirm("Delete this photo?")) return;
     setDeleting((prev) => new Set(prev).add(id));
     try {
-      await axios.delete(`http://localhost:10145/photos/${id}`);
+      await axios.delete(`https://update-xrp4.onrender.com/photos/${id}`);
       setPhotos((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
       console.error(err);
@@ -72,7 +72,7 @@ const Photos = () => {
     if (!confirm("Delete ALL photos?")) return;
     setClearingAll(true);
     try {
-      await axios.delete("http://localhost:10145/photos");
+      await axios.delete("https://update-xrp4.onrender.com/photos");
       setPhotos([]);
     } catch (err) {
       console.error(err);
@@ -167,7 +167,7 @@ const Photos = () => {
                 className="cursor-pointer"
               >
                 <img
-                  src={`http://localhost:10145${photo.image_path}`}
+                  src={`https://update-xrp4.onrender.com${photo.image_path}`}
                   alt={photo.original_name}
                   className="w-full h-40 object-cover"
                 />
@@ -209,7 +209,7 @@ const Photos = () => {
               ✖
             </button>
             <img
-              src={`http://localhost:10145/${selectedPhoto.image_path}`}
+              src={`https://update-xrp4.onrender.com/${selectedPhoto.image_path}`}
               alt="modal"
               className="w-full max-h-[75vh] object-contain rounded-t"
             />

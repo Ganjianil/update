@@ -60,15 +60,15 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
     }
     let cleanPath = imagePath.replace(/\\/g, "/");
     if (cleanPath.startsWith("upload/")) {
-      return `http://localhost:10145/${cleanPath}`;
+      return `https://update-xrp4.onrender.com/${cleanPath}`;
     }
-    return `https://newcrafts.onrender.com/upload/${cleanPath}`;
+    return `https://update-xrp4.onrender.com/upload/${cleanPath}`;
   };
 
   const testImageExists = async (filename) => {
     try {
       const response = await axios.get(
-        `http://localhost:10145/test-image/${filename}`
+        `https://update-xrp4.onrender.com/test-image/${filename}`
       );
       console.log(`Image test for ${filename}:`, response.data);
       return response.data.exists;
@@ -97,9 +97,12 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
-      const response = await axios.get("http://localhost:10145/wishlist", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://update-xrp4.onrender.com/wishlist",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (Array.isArray(response.data)) {
         const wishlistProductIds = new Set(
           response.data.map((item) => item.product_id)
@@ -166,10 +169,10 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
     try {
       setCategoriesLoading(true);
       console.log(
-        "Fetching categories from http://localhost:10145/categories/active..."
+        "Fetching categories from https://update-xrp4.onrender.com/categories/active..."
       );
       const response = await axios.get(
-        "http://localhost:10145/categories/active"
+        "https://update-xrp4.onrender.com/categories/active"
       );
       console.log("Categories fetched:", response.data);
       if (Array.isArray(response.data)) {
@@ -203,7 +206,7 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
     try {
       console.log(`Fetching products for category ${categoryId}...`);
       const response = await axios.get(
-        `http://localhost:10145/products/category/${categoryId}`
+        `https://update-xrp4.onrender.com/products/category/${categoryId}`
       );
       console.log("Products fetched:", response.data);
       if (Array.isArray(response.data)) {
@@ -268,7 +271,7 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
       const payload = { product_id: [Number(product.id)] };
       console.log(`🛒 Adding product to cart with payload:`, payload);
       const response = await axios.post(
-        "http://localhost:10145/cart",
+        "https://update-xrp4.onrender.com/cart",
         payload,
         {
           headers: {
@@ -324,7 +327,7 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
     }
     try {
       const payload = { product_id: [Number(product.id)] };
-      await axios.post("http://localhost:10145/cart", payload, {
+      await axios.post("https://update-xrp4.onrender.com/cart", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -357,7 +360,7 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
       if (wishlistItems.has(product.id)) {
         console.log(`🗑️ Removing product ${product.id} from wishlist`);
         const response = await axios.delete(
-          `http://localhost:10145/wishlist/${product.id}`,
+          `https://update-xrp4.onrender.com/wishlist/${product.id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -373,7 +376,7 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
       } else {
         console.log(`❤️ Adding product ${product.id} to wishlist`);
         const response = await axios.post(
-          "http://localhost:10145/wishlist",
+          "https://update-xrp4.onrender.com/wishlist",
           { product_id: product.id },
           {
             headers: {

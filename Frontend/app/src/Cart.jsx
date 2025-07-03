@@ -40,9 +40,12 @@ const Cart = ({
       const token = localStorage.getItem("token");
       console.log(`Removing item ${itemId} from cart...`);
 
-      await axios.delete(`http://localhost:10145/cart/item/${itemId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://update-xrp4.onrender.com/cart/item/${itemId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       // Update local state immediately
       const newCartItems = cartItems.filter((item) => item.id !== itemId);
@@ -85,7 +88,7 @@ const Cart = ({
         const token = localStorage.getItem("token");
         console.log("Clearing cart...");
 
-        await axios.delete("http://localhost:10145/cart/clear", {
+        await axios.delete("https://update-xrp4.onrender.com/cart/clear", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -128,7 +131,7 @@ const Cart = ({
       const token = localStorage.getItem("token");
       console.log("Applying coupon:", couponCode);
       const response = await axios.post(
-        "http://localhost:10145/apply-coupon",
+        "https://update-xrp4.onrender.com/apply-coupon",
         { coupon_code: couponCode },
         {
           headers: {
@@ -244,7 +247,7 @@ const Cart = ({
       };
       if (appliedCoupon) checkoutData.coupon_code = appliedCoupon.code;
       const response = await axios.post(
-        "http://localhost:10145/checkout",
+        "https://update-xrp4.onrender.com/checkout",
         checkoutData,
         {
           headers: {

@@ -14,7 +14,7 @@ const ViewOrders = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:10145/admin/orders"
+        "https://update-xrp4.onrender.com/admin/orders"
       );
       setOrders(response.data);
       setLoading(false);
@@ -27,9 +27,12 @@ const ViewOrders = () => {
   const updateOrderStatus = async (orderId, status) => {
     try {
       setUpdatingStatus(orderId);
-      await axios.put(`http://localhost:10145/order/${orderId}/status`, {
-        status,
-      });
+      await axios.put(
+        `https://update-xrp4.onrender.com/order/${orderId}/status`,
+        {
+          status,
+        }
+      );
       alert(
         `Order status updated to ${status}. Customer has been notified via email.`
       );

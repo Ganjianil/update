@@ -65,11 +65,14 @@ const Wishlist = ({ isAuthenticated: propIsAuthenticated, setCartItems }) => {
       }
 
       console.log("Fetching wishlist items...");
-      const response = await axios.get("http://localhost:10145/wishlist", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://update-xrp4.onrender.com/wishlist",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       console.log("Wishlist response:", response.data);
 
@@ -117,7 +120,7 @@ const Wishlist = ({ isAuthenticated: propIsAuthenticated, setCartItems }) => {
 
       console.log(`Removing wishlist item with ID: ${itemId}`);
       const response = await axios.delete(
-        `http://localhost:10145/wishlist/${itemId}`, // Ensure this matches backend
+        `https://update-xrp4.onrender.com/wishlist/${itemId}`, // Ensure this matches backend
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -176,7 +179,7 @@ const Wishlist = ({ isAuthenticated: propIsAuthenticated, setCartItems }) => {
       }
 
       console.log("Clearing entire wishlist...");
-      await axios.delete("http://localhost:10145/wishlist/clear", {
+      await axios.delete("https://update-xrp4.onrender.com/wishlist/clear", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -217,7 +220,7 @@ const Wishlist = ({ isAuthenticated: propIsAuthenticated, setCartItems }) => {
 
       console.log("Adding to cart from wishlist:", productId);
       await axios.post(
-        "http://localhost:10145/cart",
+        "https://update-xrp4.onrender.com/cart",
         { product_id: [productId] },
         {
           headers: {
@@ -252,11 +255,14 @@ const Wishlist = ({ isAuthenticated: propIsAuthenticated, setCartItems }) => {
         return;
       }
 
-      const response = await axios.get("http://localhost:10145/viewcart", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://update-xrp4.onrender.com/viewcart",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (Array.isArray(response.data)) {
         setCartItems(response.data);
@@ -375,7 +381,7 @@ const Wishlist = ({ isAuthenticated: propIsAuthenticated, setCartItems }) => {
                 <div className="relative w-full h-48 mb-4">
                   {item.image_path ? (
                     <img
-                      src={`http://localhost:10145/${item.image_path}`}
+                      src={`https://update-xrp4.onrender.com/${item.image_path}`}
                       alt={item.product_name || "Product"}
                       className="w-full h-full object-cover rounded-md"
                       onError={(e) => {

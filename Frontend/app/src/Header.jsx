@@ -30,9 +30,12 @@ const Header = ({ isLoggedIn, onLogout, cartItems }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
-      const response = await axios.get("http://localhost:10145/wishlist", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://update-xrp4.onrender.com/wishlist",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (Array.isArray(response.data)) {
         setWishlistCount(response.data.length);
       }

@@ -37,10 +37,13 @@ const Login = ({ onLogin = () => {} }) => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:10145/login", {
-        username: formData.username,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        "https://update-xrp4.onrender.com/login",
+        {
+          username: formData.username,
+          password: formData.password,
+        }
+      );
 
       console.log("Login response:", response.data);
 

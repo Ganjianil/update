@@ -15,7 +15,7 @@ const ForgotPassword = () => {
     setMessage("");
 
     try {
-      await axios.post("http://localhost:10145/forgot-password", {
+      await axios.post("https://update-xrp4.onrender.com/forgot-password", {
         email,
       });
       setMessage("✅ Password reset email sent! Please check your inbox.");

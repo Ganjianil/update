@@ -24,7 +24,7 @@ const ManageCategories = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:10145/categories"
+        "https://update-xrp4.onrender.com/categories"
       );
       
       setCategories(response.data);
@@ -94,7 +94,7 @@ const ManageCategories = () => {
 
       if (editingCategory) {
         await axios.put(
-          `http://localhost:10145/admin/categories/${editingCategory.id}`,
+          `https://update-xrp4.onrender.com/admin/categories/${editingCategory.id}`,
           formDataToSend,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -103,7 +103,7 @@ const ManageCategories = () => {
         setMessage("Category updated successfully!");
       } else {
         await axios.post(
-          "http://localhost:10145/admin/categories",
+          "https://update-xrp4.onrender.com/admin/categories",
           formDataToSend,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -144,7 +144,7 @@ const ManageCategories = () => {
 
     try {
       await axios.delete(
-        `http://localhost:10145/admin/categories/${categoryId}`
+        `https://update-xrp4.onrender.com/admin/categories/${categoryId}`
       );
       setMessage("Category deleted successfully!");
       await fetchCategories();
@@ -163,7 +163,7 @@ const ManageCategories = () => {
       formData.append("is_active", !currentStatus);
 
       await axios.put(
-        `http://localhost:10145/admin/categories/${categoryId}`,
+        `https://update-xrp4.onrender.com/admin/categories/${categoryId}`,
         formData
       );
 
@@ -366,7 +366,7 @@ const ManageCategories = () => {
                   <div className="relative">
                     {category.image_path ? (
                       <img
-                        src={`http://localhost:10145/${category.image_path}`}
+                        src={`https://update-xrp4.onrender.com/${category.image_path}`}
                         alt={category.name}
                         className="w-full h-48 object-cover"
                       />

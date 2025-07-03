@@ -22,7 +22,9 @@ const Photo = () => {
 
   const fetchPhotos = async () => {
     try {
-      const res = await axios.get("http://localhost:10145/viewphotos");
+      const res = await axios.get(
+        "https://update-xrp4.onrender.com/viewphotos"
+      );
       setPhotos(res.data);
     } catch (error) {
       console.error("Error fetching photos:", error);
@@ -81,7 +83,7 @@ const Photo = () => {
                 <img
                   alt={photo.original_name || "Gallery"}
                   className="w-full h-full object-cover object-center block rounded cursor-zoom-in hover:scale-105 transition-transform duration-300 ease-in-out"
-                  src={`http://localhost:10145/${photo.image_path}`}
+                  src={`https://update-xrp4.onrender.com/${photo.image_path}`}
                 />
               </div>
             ))}
@@ -97,7 +99,7 @@ const Photo = () => {
                 <img
                   alt={photo.original_name || "Gallery"}
                   className="w-full h-full object-cover object-center block rounded cursor-zoom-in hover:scale-105 transition-transform duration-300 ease-in-out"
-                  src={`http://localhost:10145/${photo.image_path}`}
+                  src={`https://update-xrp4.onrender.com/${photo.image_path}`}
                 />
               </div>
             ))}
@@ -122,7 +124,7 @@ const Photo = () => {
               ✕
             </button>
             <img
-              src={`http://localhost:10145/${selectedPhoto.image_path}`}
+              src={`https://update-xrp4.onrender.com/${selectedPhoto.image_path}`}
               alt={selectedPhoto.original_name}
               className="w-full h-auto rounded-lg shadow-2xl transform scale-100 hover:scale-105 transition-transform duration-700 ease-in-out"
             />
