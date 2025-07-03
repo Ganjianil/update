@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { HeartIcon } from "@heroicons/react/24/solid";
 
@@ -23,33 +24,6 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
     refreshCart: typeof refreshCart,
     propIsAuthenticated,
   });
-
-  const dummyCategories = [
-    {
-      id: 1,
-      name: "Electronics",
-      image_path: "https://dummyimage.com/420x260/000/fff&text=Electronics",
-      description: "Gadgets and devices for everyday use.",
-    },
-    {
-      id: 2,
-      name: "Fashion",
-      image_path: "https://dummyimage.com/420x260/000/fff&text=Fashion",
-      description: "Trendy clothing and accessories.",
-    },
-    {
-      id: 3,
-      name: "Home Decor",
-      image_path: "https://dummyimage.com/420x260/000/fff&text=Home+Decor",
-      description: "Stylish items to enhance your living space.",
-    },
-    {
-      id: 4,
-      name: "Books",
-      image_path: "https://dummyimage.com/420x260/000/fff&text=Books",
-      description: "A wide range of novels and educational books.",
-    },
-  ];
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
@@ -121,19 +95,11 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
     const authStatus = !!token;
     setIsAuthenticated(authStatus);
     console.log("Category component - Auth status:", authStatus);
-    const storedCategories = JSON.parse(
-      localStorage.getItem("categories") || "[]"
-    );
-    if (storedCategories.length === 0) {
-      localStorage.setItem("categories", JSON.stringify(dummyCategories));
-      setCategories(dummyCategories);
-      setCategoriesLoading(false);
-    } else {
-      setCategories(storedCategories);
-      setCategoriesLoading(false);
-    }
-    if (token) {
-      fetchCategories();
+
+    // Fetch categories for all users
+    fetchCategories();
+    // Fetch wishlist only if authenticated
+    if (authStatus) {
       fetchWishlistItems();
     }
   }, []);
@@ -177,25 +143,18 @@ const Category = ({ refreshCart, isAuthenticated: propIsAuthenticated }) => {
       console.log("Categories fetched:", response.data);
       if (Array.isArray(response.data)) {
         setCategories(response.data);
-        localStorage.setItem("categories", JSON.stringify(response.data));
       } else {
         console.error("Expected array but got:", typeof response.data);
-        setCategories(dummyCategories);
-        localStorage.setItem("categories", JSON.stringify(dummyCategories));
-        setError("Invalid data from server. Using dummy categories.");
+        setCategories([]);
+        setError("Invalid data from server.");
       }
     } catch (error) {
       console.error(
         "Error fetching categories:",
         error.response?.data || error.message
       );
-      const localCategories = JSON.parse(
-        localStorage.getItem("categories") || "[]"
-      );
-      setCategories(
-        localCategories.length > 0 ? localCategories : dummyCategories
-      );
-      setError("Failed to fetch categories from server. Using local data.");
+      setCategories([]);
+      setError("Failed to fetch categories from server.");
     } finally {
       setCategoriesLoading(false);
     }
