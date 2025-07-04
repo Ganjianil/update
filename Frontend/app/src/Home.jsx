@@ -21,7 +21,6 @@ const Home = () => {
   return (
     <>
   
-      <Search />
       <Hero />
       <Category />
       <Photo />
