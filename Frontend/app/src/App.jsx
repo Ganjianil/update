@@ -20,7 +20,7 @@ import Wishlist from "./Wishlist";
 import Checkout from "./Checkout";
 import Search from "./Search";
 import Product from "./Product";
-import Products from "./Products"
+import Products from "./Products";
 import PreOrderProducts from "./PreOrderProducts";
 import ForgotPassword from "./ForgotPassword";
 import GoogleFormButton from "./GoogleFormButton";
@@ -69,12 +69,9 @@ const App = () => {
 
     try {
       console.log("🔄 Fetching cart items from server...");
-      const response = await axios.get(
-        "https://update-xrp4.onrender.com/viewcart",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get("http://localhost:10145/viewcart", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       console.log("✅ Cart items fetched from server:", response.data);
       const items = Array.isArray(response.data) ? response.data : [];
@@ -170,80 +167,88 @@ const App = () => {
         isLoggedIn={isLoggedIn}
         onLogout={handleLogout}
         cartItems={cartItems}
+        className="fixed-header" // Add a class for styling
       />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route
-          path="/admin/login"
-          element={<AdminLogin onAdminLogin={handleAdminLogin} />}
-        />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard
-                isAdminAuthenticated={isAdminAuthenticated}
-                onAdminLogout={handleAdminLogout}
-              />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart
-                isAuthenticated={isLoggedIn}
-                cartItems={cartItems}
-                setCartItems={setCartItems}
+      <div className="content-container pt-28">
+        {" "}
+        {/* Add padding-top to avoid content overlap */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route
+            path="/admin/login"
+            element={<AdminLogin onAdminLogin={handleAdminLogin} />}
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard
+                  isAdminAuthenticated={isAdminAuthenticated}
+                  onAdminLogout={handleAdminLogout}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart
+                  isAuthenticated={isLoggedIn}
+                  cartItems={cartItems}
+                  setCartItems={setCartItems}
+                  refreshCart={refreshCart}
+                  cartLoading={cartLoading}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <Category
                 refreshCart={refreshCart}
-                cartLoading={cartLoading}
-              />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/categories"
-          element={
-            <Category refreshCart={refreshCart} isAuthenticated={isLoggedIn} />
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            <ProtectedRoute>
-              <Orders isAuthenticated={isLoggedIn} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/wishlist"
-          element={
-            <ProtectedRoute>
-              <Wishlist
                 isAuthenticated={isLoggedIn}
-                setCartItems={setCartItems}
               />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/checkout/:productId"
-          element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/products" element={<Products />} /> {/* Fixed route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/preorderproducts" element={<PreOrderProducts />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/googleformbutton" element={<GoogleFormButton/>} />
-      </Routes>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Orders isAuthenticated={isLoggedIn} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist
+                  isAuthenticated={isLoggedIn}
+                  setCartItems={setCartItems}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout/:productId"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/preorderproducts" element={<PreOrderProducts />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/googleformbutton" element={<GoogleFormButton />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
     </Router>
   );
 };
