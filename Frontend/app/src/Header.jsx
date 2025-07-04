@@ -5,25 +5,23 @@ import axios from "axios";
 import {
   HeartIcon,
   ShoppingCartIcon,
+  HomeIcon,
   Bars3Icon,
   XMarkIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 
 const Header = ({ isLoggedIn, onLogout, cartItems }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     setIsAuthenticated(isLoggedIn);
-    if (isLoggedIn) {
-      fetchWishlistCount();
-    } else {
-      setWishlistCount(0);
-    }
+    if (isLoggedIn) fetchWishlistCount();
+    else setWishlistCount(0);
   }, [isLoggedIn, cartItems]);
 
   const fetchWishlistCount = async () => {
@@ -36,12 +34,9 @@ const Header = ({ isLoggedIn, onLogout, cartItems }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (Array.isArray(response.data)) {
-        setWishlistCount(response.data.length);
-      }
+      if (Array.isArray(response.data)) setWishlistCount(response.data.length);
     } catch (err) {
-      console.error("Error fetching wishlist:", err);
-      setWishlistCount(0);
+      console.error("Wishlist fetch error:", err);
     }
   };
 
@@ -51,6 +46,41 @@ const Header = ({ isLoggedIn, onLogout, cartItems }) => {
     setIsAuthenticated(false);
     setWishlistCount(0);
     navigate("/login", { state: { from: location.pathname } });
+    setMobileMenuOpen(false);
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+
+    try {
+      const response = await axios.get(
+        `https://update-xrp4.onrender.com/products/search?q=${encodeURIComponent(
+          searchQuery.trim()
+        )}`
+      );
+      const products = response.data;
+
+      if (Array.isArray(products)) {
+        if (products.length === 1) {
+          navigate(`/product/${products[0].id}`);
+        } else if (products.length > 1) {
+          navigate(
+            `/products?search=${encodeURIComponent(searchQuery.trim())}`
+          );
+        } else {
+          navigate(
+            `/products?search=${encodeURIComponent(searchQuery.trim())}`
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      // Fallback to search page even if the API fails
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+    } finally {
+      setSearchQuery("");
+      setMobileMenuOpen(false);
+    }
   };
 
   const cartItemCount = cartItems.reduce(
@@ -59,168 +89,209 @@ const Header = ({ isLoggedIn, onLogout, cartItems }) => {
   );
 
   return (
-    <header className="bg-white shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center">
+    <header className="bg-white shadow-md fixed top-0 w-full z-50">
+      {/* Desktop Layout */}
+      <div className="hidden md:flex max-w-7xl mx-auto px-4 py-3 items-center justify-between space-x-4">
+        <Link to="/" className="flex items-center space-x-2">
           <img
             src={hp}
-            alt="logo"
-            className="w-10 h-10 object-cover rounded-full border-2 border-indigo-500"
+            alt="Logo"
+            className="w-10 h-10 rounded-full border-2 border-blue-600"
           />
-          <span className="ml-3 font-semibold text-lg text-gray-800">
+          <span className="text-lg font-semibold text-gray-800">
             Nandhini Brass & Metal Crafts
           </span>
         </Link>
-
-        <div className="md:hidden">
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? (
-              <XMarkIcon className="h-6 w-6 text-gray-700" />
-            ) : (
-              <Bars3Icon className="h-6 w-6 text-gray-700" />
-            )}
+        {/* Search */}
+        <div className="flex-1 mx-6 relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+            placeholder="Search idols, materials, collections..."
+            className="w-full px-4 py-2 pr-10 border rounded-md text-sm focus:outline-none focus:ring focus:border-blue-300"
+          />
+          <button
+            onClick={handleSearch}
+            className="absolute right-2 top-2 text-blue-600 hover:text-blue-800 text-sm"
+          >
+            🔍
           </button>
         </div>
-
-        <nav className="hidden md:flex items-center space-x-6 text-sm">
-          <Link to="/" className="hover:text-indigo-600">
-            Home
+        {/* Navigation and Icons */}
+        <nav className="flex items-center space-x-6">
+          <Link
+            to="/"
+            className="text-gray-600 hover:text-blue-600 transition-colors"
+          >
+            <HomeIcon className="w-6 h-6" />
           </Link>
-          <Link to="/admin/login" className="hover:text-indigo-600">
-            Surge
-          </Link>
-          {isAuthenticated && (
-            <Link to="/orders" className="hover:text-indigo-600">
-              Orders
-            </Link>
-          )}
-          {!isAuthenticated ? (
+          {isAuthenticated ? (
             <>
-              <Link to="/login" className="hover:text-indigo-600">
-                Login
+              <Link
+                to="/wishlist"
+                className="relative text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                <HeartIcon className="w-6 h-6" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {wishlistCount}
+                  </span>
+                )}
               </Link>
-              <Link to="/signup" className="hover:text-indigo-600">
-                Signup
-              </Link>
+              <button
+                onClick={handleLogout}
+                className="text-gray-600 hover:text-red-600 transition-colors"
+              >
+                Logout
+              </button>
             </>
           ) : (
-            <button
-              onClick={handleLogout}
-              className="hover:text-indigo-600 bg-transparent text-sm"
-            >
-              Logout
-            </button>
+            <>
+              <Link
+                to="/signup"
+                className="text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                Signup
+              </Link>
+              <Link
+                to="/login"
+                className="text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                Login
+              </Link>
+            </>
           )}
-        </nav>
-
-        <div className="hidden md:flex items-center space-x-3">
-          {isAuthenticated && (
-            <Link
-              to="/wishlist"
-              className="relative bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
-            >
-              <HeartIcon className="w-5 h-5" />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-white text-red-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
-          )}
-          <Link to="/cart">
-            <div className="relative bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
-              <ShoppingCartIcon className="w-5 h-5" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-white text-blue-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
-            </div>
+          <Link
+            to="/cart"
+            className="relative text-gray-600 hover:text-blue-600 transition-colors"
+          >
+            <ShoppingCartIcon className="w-6 h-6" />
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
           </Link>
+        </nav>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden pl-4 pr-6 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <button
+            className="text-blue-600"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <XMarkIcon className="w-6 h-6" />
+            ) : (
+              <Bars3Icon className="w-6 h-6" />
+            )}
+          </button>
+          <Link to="/" className="flex items-center space-x-2">
+            <img
+              src={hp}
+              alt="Logo"
+              className="w-10 h-10 rounded-full border-2 border-blue-600"
+            />
+            <span className="text-base font-semibold text-gray-800">
+              Nandhini Brass & Metal Crafts
+            </span>
+          </Link>
+        </div>
+
+        <Link to="/cart" className="relative hover:text-blue-600 ml-auto pr-2">
+          <ShoppingCartIcon className="w-5 h-5" />
+          {cartItemCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+              {cartItemCount}
+            </span>
+          )}
+        </Link>
+      </div>
+
+      {/* Mobile Search */}
+      <div className="md:hidden px-4 pb-2">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+            placeholder="Search products..."
+            className="w-full px-4 py-2 pr-10 border rounded-md text-sm focus:outline-none focus:ring focus:border-blue-300"
+          />
+          <button
+            onClick={handleSearch}
+            className="absolute right-2 top-2 text-blue-600 hover:text-blue-800 text-sm"
+          >
+            🔍
+          </button>
         </div>
       </div>
 
+      {/* Mobile Nav Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 p-4 space-y-4 text-sm">
-          <nav className="flex flex-col gap-3">
+        <div className="px-4 pb-3 border-t bg-white md:hidden">
+          <nav className="flex flex-col space-y-3 pt-2">
             <Link
               to="/"
-              className="text-gray-800 hover:text-indigo-600 font-medium"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center px-4 py-2 rounded-md hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all"
             >
-              🏠 Home
+              <HomeIcon className="w-4 h-4 mr-1" />
+              Home
             </Link>
             <Link
-              to="/surge"
-              className="text-gray-800 hover:text-indigo-600 font-medium"
+              to="/admin/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center px-4 py-2 rounded-md hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all"
             >
-              📦 Surge
+              Surge
             </Link>
-            {isAuthenticated && (
-              <Link
-                to="/orders"
-                className="text-gray-800 hover:text-indigo-600 font-medium"
-              >
-                📋 Orders
-              </Link>
-            )}
             {!isAuthenticated ? (
               <>
                 <Link
-                  to="/login"
-                  className="text-gray-800 hover:text-indigo-600 font-medium"
+                  to="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center px-4 py-2 rounded-md hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all"
                 >
-                  🔐 Login
+                  Signup
                 </Link>
                 <Link
-                  to="/signup"
-                  className="text-gray-800 hover:text-indigo-600 font-medium"
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center px-4 py-2 rounded-md hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all"
                 >
-                  🆕 Signup
+                  Login
                 </Link>
               </>
             ) : (
-              <button
-                onClick={handleLogout}
-                className="text-left text-red-600 hover:text-red-700 font-medium"
-              >
-                🚪 Logout
-              </button>
-            )}
-          </nav>
-
-          <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-600 mb-2">
-              Your Essentials
-            </h3>
-            <div className="flex flex-col gap-3">
-              {isAuthenticated && (
+              <>
                 <Link
                   to="/wishlist"
-                  className="flex items-center justify-between text-gray-700 hover:text-red-500"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center px-4 py-2 rounded-md hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all relative"
                 >
-                  <span className="flex items-center gap-2">
-                    <HeartIcon className="w-5 h-5" />
-                    Wishlist
-                  </span>
-                  <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    {wishlistCount}
-                  </span>
+                  <HeartIcon className="w-5 h-5 mr-1" />
+                  Wishlist
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                      {wishlistCount}
+                    </span>
+                  )}
                 </Link>
-              )}
-              <Link
-                to="/cart"
-                className="flex items-center justify-between text-gray-700 hover:text-blue-600"
-              >
-                <span className="flex items-center gap-2">
-                  <ShoppingCartIcon className="w-5 h-5" />
-                  Cart
-                </span>
-                <span className="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                  {cartItemCount}
-                </span>
-              </Link>
-            </div>
-          </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center px-4 py-2 rounded-md hover:bg-red-50 text-gray-800 hover:text-red-600 transition-all text-left"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+          </nav>
         </div>
       )}
     </header>

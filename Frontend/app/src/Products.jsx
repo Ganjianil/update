@@ -86,12 +86,83 @@ const Products = () => {
     }
   };
 
+  const handleBuyNow = async (productId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", {
+        state: { from: location.pathname + location.search },
+      });
+      return;
+    }
+
+    try {
+      console.log("Buy now, product ID:", productId, "Token:", token);
+      const response = await axios.post(
+        "https://update-xrp4.onrender.com/addtocart", // Use the same endpoint as Add to Cart for now
+        { product_id: productId, quantity: 1 },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Buy now response:", response.data);
+      // After adding to cart, navigate to the cart page
+      navigate("/cart"); // Adjust this route based on your app's cart route
+    } catch (error) {
+      console.error(
+        "Error buying now:",
+        error.response?.status,
+        error.response?.data || error.message
+      );
+      setError(
+        error.response?.data?.error ||
+          "Failed to process buy now. Please try again."
+      );
+    }
+  };
+
+  const handleAddToWishlist = async (productId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", {
+        state: { from: location.pathname + location.search },
+      });
+      return;
+    }
+
+    try {
+      console.log(
+        "Adding to wishlist, product ID:",
+        productId,
+        "Token:",
+        token
+      );
+      const response = await axios.post(
+        "https://update-xrp4.onrender.com/addtowishlist",
+        { product_id: productId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Add to wishlist response:", response.data);
+      alert("Product added to wishlist!");
+    } catch (error) {
+      console.error(
+        "Error adding to wishlist:",
+        error.response?.status,
+        error.response?.data || error.message
+      );
+      setError(
+        error.response?.data?.error ||
+          "Failed to add product to wishlist. Please try again."
+      );
+    }
+  };
+
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
-      return "https://via.placeholder.com/200";
+      return "https://placehold.co/200x200"; // Reliable fallback
     }
-    // Prepend the base URL to the path as provided by the backend
-    return `https://update-xrp4.onrender.com${imagePath}`;
+    return imagePath; // Use the full URL from the backend
   };
 
   if (loading) {
@@ -132,7 +203,7 @@ const Products = () => {
                   alt={product.product_name}
                   className="w-full h-48 object-cover rounded mb-4"
                   onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/200";
+                    e.target.src = "https://placehold.co/200x200";
                     console.log(
                       "Image failed to load for:",
                       product.product_name,
@@ -161,12 +232,26 @@ const Products = () => {
                 <p className="text-indigo-600 font-semibold mb-4">
                   ₹{product.product_price || "N/A"}
                 </p>
-                <button
-                  onClick={() => handleAddToCart(product.id)}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-medium transition"
-                >
-                  Add to Cart
-                </button>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => handleAddToCart(product.id)}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-medium transition"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    onClick={() => handleBuyNow(product.id)}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition"
+                  >
+                    Buy Now
+                  </button>
+                  <button
+                    onClick={() => handleAddToWishlist(product.id)}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium transition"
+                  >
+                    Add to Wishlist
+                  </button>
+                </div>
               </div>
             ))}
           </div>
