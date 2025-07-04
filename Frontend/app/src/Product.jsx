@@ -16,7 +16,7 @@ const Product = () => {
         setError("");
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `https://update-xrp4.onrender.com/viewproducts/${id}`,
+          `/${id}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
           }
